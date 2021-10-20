@@ -1,48 +1,58 @@
-import java.time.LocalTime;
-import java.util.Formatter;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.TreeMap;
-
-
 public class Compare {
 
     public static void main(String[] args) {
-        Map <String, Long> resultMillisecond = new LinkedHashMap<>();
-        Map <String, Long> resultNanosecond = new LinkedHashMap<>();
-        String str =  "159263";
-        int repetition = 20;
-        Nanosecond nano = new Nanosecond();
-        Millisecond msec = new Millisecond();
+        final String strPlus = "string";
+        String str = "";
+        int count = 100000;
+        long start, end;
 
-        resultNanosecond.put("Strinr+", nano.stringPlusNanosecond(str, repetition));
-        resultNanosecond.put("Strinr.concat()", nano.stringConcatNanosecond(str, repetition));
-        resultNanosecond.put("StringBuffer", nano.stringBufferNanosecond(str, repetition));
-        resultNanosecond.put("StringBuilder", nano.stringBuilderNanosecond(str, repetition));
-
-
-        resultMillisecond.put("Strinr+", msec.stringPlusNanosecond(str, repetition));
-        resultMillisecond.put("Strinr.concat()", msec.stringConcatNanosecond(str, repetition));
-        resultMillisecond.put("StringBuffer", msec.stringBufferNanosecond(str, repetition));
-        resultMillisecond.put("StringBuilder", msec.stringBuilderNanosecond(str, repetition));
-
-        System.out.println("Nanosecond");
-        for (Map.Entry <String, Long> item : resultNanosecond.entrySet()){
-            System.out.printf("%-20s %d \n", item.getKey(), item.getValue());
-
+        System.out.println("String+ на " + count + " повторений:");
+        start = System.nanoTime();
+        for (int i = 0; i < count; i++) {
+            str += strPlus;
         }
+        end = System.nanoTime();
+        System.out.println("Наносекунд: " + (end - start));
+        System.out.printf("Милисекунд: %.2f\n", ((double) (end - start) / 1000000));
+        System.out.printf("Секунд: %.2f\n", ((double) (end - start) / 1000000000 ));
+        str = "";
 
-        System.out.println("\nMillisecond");
-        for (Map.Entry <String, Long> item : resultMillisecond.entrySet()){
-            System.out.printf("%-20s %d \n", item.getKey(), item.getValue());
-
+        System.out.println("\nString.concat на " + count + " повторений:");
+        start = System.nanoTime();
+        for (int i = 0; i < count; i++) {
+            str = str.concat(strPlus);
         }
+        end = System.nanoTime();
+        System.out.println("Наносекунд: " + (end - start));
+        System.out.printf("Милисекунд: %.2f\n", ((double) (end - start) / 1000000));
+        System.out.printf("Секунд: %.2f\n", ((double) (end - start) / 1000000000 ));
 
 
+        StringBuffer strBuffer = new StringBuffer();
+        System.out.println("\nStringBuffer на " + count + " повторений:");
+        start = System.nanoTime();
+        for (int i = 0; i < count; i++) {
+            strBuffer.append(strPlus);
+        }
+        end = System.nanoTime();
+        System.out.println("Наносекунд: " + (end - start));
+        System.out.printf("Милисекунд: %.2f\n", ((double) (end - start) / 1000000));
+        System.out.printf("Секунд: %.2f\n", ((double) (end - start) / 1000000000 ));
+
+
+        StringBuilder strBuilder = new StringBuilder();
+        System.out.println("\nStringBuilder на " + count + " повторений:");
+        start = System.nanoTime();
+        for (int i = 0; i < count; i++) {
+            strBuilder.append(strPlus);
+        }
+        end = System.nanoTime();
+        System.out.println("Наносекунд: " + (end - start));
+        System.out.printf("Милисекунд: %.2f\n", ((double) (end - start) / 1000000));
+        System.out.printf("Секунд: %.2f\n", ((double) (end - start) / 1000000000 ));
 
 
     }
-
 
 
 }
