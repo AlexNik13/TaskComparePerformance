@@ -1,48 +1,66 @@
-import java.time.LocalTime;
-import java.util.Formatter;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.TreeMap;
-
-
 public class Compare {
+    public static final String STR_PLUS = "string";
+    public static final int COUNT = 100000;
 
     public static void main(String[] args) {
-        Map <String, Long> resultMillisecond = new LinkedHashMap<>();
-        Map <String, Long> resultNanosecond = new LinkedHashMap<>();
-        String str =  "159263";
-        int repetition = 20;
-        Nanosecond nano = new Nanosecond();
-        Millisecond msec = new Millisecond();
+        long measure = stringPlusMeasure(COUNT, STR_PLUS);
+        printResult("String +", measure, COUNT);
 
-        resultNanosecond.put("Strinr+", nano.stringPlusNanosecond(str, repetition));
-        resultNanosecond.put("Strinr.concat()", nano.stringConcatNanosecond(str, repetition));
-        resultNanosecond.put("StringBuffer", nano.stringBufferNanosecond(str, repetition));
-        resultNanosecond.put("StringBuilder", nano.stringBuilderNanosecond(str, repetition));
+        measure = stringConcatMeasure(COUNT, STR_PLUS);
+        printResult("String.concat", measure, COUNT);
 
+        measure = stringBufferMeasure(COUNT, STR_PLUS);
+        printResult("StringBuffer", measure, COUNT);
 
-        resultMillisecond.put("Strinr+", msec.stringPlusNanosecond(str, repetition));
-        resultMillisecond.put("Strinr.concat()", msec.stringConcatNanosecond(str, repetition));
-        resultMillisecond.put("StringBuffer", msec.stringBufferNanosecond(str, repetition));
-        resultMillisecond.put("StringBuilder", msec.stringBuilderNanosecond(str, repetition));
-
-        System.out.println("Nanosecond");
-        for (Map.Entry <String, Long> item : resultNanosecond.entrySet()){
-            System.out.printf("%-20s %d \n", item.getKey(), item.getValue());
-
-        }
-
-        System.out.println("\nMillisecond");
-        for (Map.Entry <String, Long> item : resultMillisecond.entrySet()){
-            System.out.printf("%-20s %d \n", item.getKey(), item.getValue());
-
-        }
-
-
-
-
+        measure = stringBuilderMeasure(COUNT, STR_PLUS);
+        printResult("StringBuilder", measure, COUNT);
     }
 
+    private static long stringBuilderMeasure(int count, String string) {
+        StringBuilder strBuilder = new StringBuilder();
+        long start = System.nanoTime();
+        for (int i = 0; i < count; i++) {
+            strBuilder.append(string);
+        }
+        long end = System.nanoTime();
+        return end - start;
+    }
 
+    private static long stringBufferMeasure(int count, String string) {
+        StringBuffer strBuffer = new StringBuffer();
+        long start = System.nanoTime();
+        for (int i = 0; i < count; i++) {
+            strBuffer.append(string);
+        }
+        long end = System.nanoTime();
+        return end - start;
+    }
+
+    private static long stringConcatMeasure(int count, String string) {
+        String str = string;
+        long start = System.nanoTime();
+        for (int i = 0; i < count; i++) {
+            str = str.concat(string);
+        }
+        long end = System.nanoTime();
+        return end - start;
+    }
+
+    private static long stringPlusMeasure(int count, String string) {
+        String str = string;
+        long start = System.nanoTime();
+        for (int i = 0; i < count; i++) {
+            str += string;
+        }
+        long end = System.nanoTime();
+        return end - start;
+    }
+
+    private static void printResult(String builder, long nanoSeconds, int count) {
+        System.out.println("\n" + builder + " на " + count + " повторений:");
+        System.out.println("Наносекунд: " + nanoSeconds);
+        System.out.printf("Милисекунд: %.2f\n", nanoSeconds / 1000000.0);
+        System.out.printf("Секунд: %.2f\n", nanoSeconds / 1000000000.0);
+    }
 
 }
